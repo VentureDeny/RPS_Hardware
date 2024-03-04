@@ -44,13 +44,13 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	}
 
 }
-void sendJson() {
+void sendJson(unsigned char type,unsigned char data0) {
   // 创建JSON对象
   JsonDocument doc;
-  doc["sensor"] = "gps";
-  doc["time"] = 1351824120;
-  doc["data"][0] = 48.756080;
-  doc["data"][1] = 2.302038;
+  doc[type] = data0;
+  //doc["time"] = 1351824120;
+  //doc["data"][0] = 48.756080;
+  //doc["data"][1] = 2.302038;
   // 将JSON对象序列化为字符串
   String jsonString;
   serializeJson(doc, jsonString);
