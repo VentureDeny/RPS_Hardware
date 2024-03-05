@@ -53,6 +53,7 @@ void sendJson(unsigned char type,unsigned char data0) {
   //doc["data"][1] = 2.302038;
   // 将JSON对象序列化为字符串
   String jsonString;
+  
   serializeJson(doc, jsonString);
   // 发送JSON字符串到WebSocket服务器
   webSocket.sendTXT(jsonString);
@@ -96,10 +97,10 @@ void setup(){
 	webSocket.onEvent(webSocketEvent);
 
 	// use HTTP Basic Authorization this is optional remove if not needed
-	webSocket.setAuthorization("user", "Password");
+	//webSocket.setAuthorization("user", "Password");
 
 	// try ever 5000 again if connection has failed
-	webSocket.setReconnectInterval(5000);
+	webSocket.setReconnectInterval(1000);
 
   app_main();
 }
