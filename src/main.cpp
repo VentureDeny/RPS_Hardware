@@ -13,9 +13,9 @@
 WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
-const char* ssid = "YOUR_WIFI_SSID"; // 替换为你的WiFi SSID
-const char* password = "YOUR_WIFI_PASSWORD"; // 替换为你的WiFi密码
-const char* websocket_server = "ws://example.com:80"; // 替换为你的WebSocket服务器地址
+const char* ssid = "b站关注嘉然"; // 替换为你的WiFi SSID
+const char* password = "qwertyuiop123"; // 替换为你的WiFi密码
+const char* websocket_server = "ws://192.168.3.93:8080"; // 替换为你的WebSocket服务器地址
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
@@ -44,7 +44,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	}
 
 }
-void sendJson(unsigned char type,unsigned char data0) {
+/* void sendJson(uint8_t *  type,uint8_t *  data0) {
   // 创建JSON对象
   JsonDocument doc;
   doc[type] = data0;
@@ -58,11 +58,55 @@ void sendJson(unsigned char type,unsigned char data0) {
   // 发送JSON字符串到WebSocket服务器
   webSocket.sendTXT(jsonString);
 }
+ */
+void SendGPSJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) {
+    // 创建一个 JSON 对象
+    JsonDocument doc;
+    JsonObject gpsObj = doc[data0].to<JsonObject>();
+    gpsObj["id"] = data1;
+    gpsObj["location"] = data2;
+
+    // 将 JSON 对象序列化为字符串
+    String jsonString;
+    serializeJson(doc, jsonString);
+
+    // 发送 JSON 字符串到 WebSocket 服务器
+    webSocket.sendTXT(jsonString);
+}
+
+void SendStatusJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) {
+    // 创建一个 JSON 对象
+    JsonDocument doc;
+    JsonObject statusObj = doc[data0].to<JsonObject>();
+    statusObj["id"] = data1;
+    statusObj["battery"] = data2;
+
+    // 将 JSON 对象序列化为字符串
+    String jsonString;
+    serializeJson(doc, jsonString);
+
+    // 发送 JSON 字符串到 WebSocket 服务器
+    webSocket.sendTXT(jsonString);
+}
+void SendRPSJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) {
+    // 创建一个 JSON 对象
+    JsonDocument doc;
+    JsonObject rpsObj = doc[data0].to<JsonObject>();
+    rpsObj["id"] = data1;
+    rpsObj["x"] = data2;
+
+    // 将 JSON 对象序列化为字符串
+    String jsonString;
+    serializeJson(doc, jsonString);
+
+    // 发送 JSON 字符串到 WebSocket 服务器
+    webSocket.sendTXT(jsonString);
+}
 
 // 任务1执行的函数
 void task1(void *pvParameters) {
     while (1) {
-        
+        //sendJson(12,30);
         vTaskDelay(1000 / portTICK_PERIOD_MS); // 延迟1秒
     }
 }
