@@ -59,12 +59,12 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
   webSocket.sendTXT(jsonString);
 }
  */
-void SendGPSJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) {
+void SendGPSJson(const char* type,const char* id, const char* position) {
     // 创建一个 JSON 对象
     JsonDocument doc;
-    JsonObject gpsObj = doc[data0].to<JsonObject>();
-    gpsObj["id"] = data1;
-    gpsObj["location"] = data2;
+    JsonObject gpsObj = doc[type].to<JsonObject>();
+    gpsObj["id"] = id;
+    gpsObj["location"] = position;
 
     // 将 JSON 对象序列化为字符串
     String jsonString;
@@ -74,12 +74,13 @@ void SendGPSJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) 
     webSocket.sendTXT(jsonString);
 }
 
-void SendStatusJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) {
+void SendStatusJson(const char* type,const char* id, const char* battery,const char* MacAddress) {
     // 创建一个 JSON 对象
     JsonDocument doc;
-    JsonObject statusObj = doc[data0].to<JsonObject>();
-    statusObj["id"] = data1;
-    statusObj["battery"] = data2;
+    JsonObject statusObj = doc[type].to<JsonObject>();
+    statusObj["id"] = id;
+    statusObj["battery"] = battery;
+    statusObj["MAC"] = MacAddress;
 
     // 将 JSON 对象序列化为字符串
     String jsonString;
@@ -88,12 +89,13 @@ void SendStatusJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data
     // 发送 JSON 字符串到 WebSocket 服务器
     webSocket.sendTXT(jsonString);
 }
-void SendRPSJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) {
+void SendRPSJson(const char* type,const char* id, const char* x,const char* y) {
     // 创建一个 JSON 对象
     JsonDocument doc;
-    JsonObject rpsObj = doc[data0].to<JsonObject>();
-    rpsObj["id"] = data1;
-    rpsObj["x"] = data2;
+    JsonObject rpsObj = doc[type].to<JsonObject>();
+    statusObj["id"] = id;
+    rpsObj["x"] = x;
+    rpsObj["y"] = y;
 
     // 将 JSON 对象序列化为字符串
     String jsonString;
@@ -106,7 +108,7 @@ void SendRPSJson(uint8_t* type, uint8_t* data0, uint8_t* data1, uint8_t* data2) 
 // 任务1执行的函数
 void task1(void *pvParameters) {
     while (1) {
-        //sendJson(12,30);
+        SendGPSJson("GPS","30","29.02,29.77");
         vTaskDelay(1000 / portTICK_PERIOD_MS); // 延迟1秒
     }
 }
