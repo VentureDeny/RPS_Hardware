@@ -15,7 +15,7 @@ void websocket_setup(const char* ssid, const char* password, const char* server,
     Serial.println("Connected to WiFi");
     webSocket.begin(server, port, "/common");
     webSocket.onEvent(webSocketEvent);
-    webSocket.setReconnectInterval(2000);
+    webSocket.setReconnectInterval(1500);
 }
 
 void websocket_loop() {
