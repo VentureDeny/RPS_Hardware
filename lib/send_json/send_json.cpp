@@ -48,3 +48,16 @@ void sendRPSJson(const char* type, const char* id, const char* x, const char* y)
     // 发送 JSON 字符串到 WebSocket 服务器
     webSocket.sendTXT(jsonString);
 }
+
+void sendSignupJson(const char* type, const char* id) {
+    // Implementation...
+    JsonDocument doc;
+    JsonObject signupObj = doc[type].to<JsonObject>();
+    signupObj["id"] = id;
+    // 将 JSON 对象序列化为字符串
+    String jsonString;
+    serializeJson(doc, jsonString);
+
+    // 发送 JSON 字符串到 WebSocket 服务器
+    webSocket.sendTXT(jsonString);
+}

@@ -4,5 +4,5 @@
 void sendGPSJson(const char* type, const char* id, const char* position);
 void sendStatusJson(const char* type, const char* id, const char* battery, const char* macAddress);
 void sendRPSJson(const char* type, const char* id, const char* x, const char* y);
-
+void sendSignupJson(const char* type, const char* id);
 #endif // SEND_JSON_H
