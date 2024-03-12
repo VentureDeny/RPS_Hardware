@@ -30,7 +30,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 			break;
 		case WStype_CONNECTED:
 			// send message to server when Connected
-			webSocket.sendTXT("{\"Signup\":{\"id\":\"30\"}}");
+			webSocket.sendTXT("{\"Signup\":{\"id\":\"EVANGELION_02_TESTTYPE\"}}");
 			break;
 		case WStype_TEXT:
 			// send message to server
