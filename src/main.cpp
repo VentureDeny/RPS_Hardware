@@ -10,40 +10,40 @@
 #include <WebSocketsClient.h>
 #include <send_json.h>
 #include <websocket_conn.h>
-#include <NMEAGPS.h>
-NMEAGPS gps;
-gps_fix fix;
+#include <TinyGPSPlus.h>
+TinyGPSPlus gps;
 
-// 定义ESP32的Serial2引脚
-#define RX_PIN 16
-#define TX_PIN 17
-
-
-// 任务1执行的函数
-// 任务1执行的函数
-void task1(void *pvParameters) {
-  
-    Serial.println("Task 1 started.");
-    while (true) {
+void gps_task(void *pvParameters) {
+    //Serial.println("Start gps_task");
+    while (1) {
+        //Serial.println("Start gps_task");
         while (Serial2.available() > 0) {
-            if (gps.decode( Serial2.read() )) {
-                Serial.println("GPS data decoded.");
-                if (gps.available()) {
-                    fix = gps.read();
-                    if (fix.valid.location) {
-                        Serial.print("Location: ");
-                        Serial.print(fix.latitude(), 6);
-                        Serial.print(", ");
-                        Serial.println(fix.longitude(), 6);
-                    } else {
-                        Serial.println("Location data is not valid.");
-                    }
-                } else {
-                    Serial.println("No GPS data available.");
+            //Serial.println("Start gps_task2");
+            char c = Serial2.read();Serial2.available() > 0;
+            if (gps.encode(c)) {
+                if (gps.location.isValid()) {
+                    float latitude = gps.location.lat();
+                    float longitude = gps.location.lng();
+                    // 根据需要调用sendStatusJson或其他函数来处理GPS数据
+                    // 例如: sendStatusJson("GPS", String(latitude, 6), String(longitude, 6), "A0:20:13:34:E3");
+                    Serial.print("Latitude= ");
+                    Serial.print(latitude, 6);
+                    Serial.print(" Longitude= ");
+                    Serial.println(longitude, 6);
                 }
             }
         }
-        vTaskDelay(1000 / portTICK_PERIOD_MS); // 增加延迟以减少日志量
+        vTaskDelay(1000 / portTICK_PERIOD_MS); // 每秒读取一次
+    }
+}
+
+
+
+void task1(void *pvParameters) {
+    //Serial.println("Start xTask1");
+    while (1) {
+        sendStatusJson("Status","EVANGELION_01_TESTTYPE","30","A0:20:13:34:E3");
+        vTaskDelay(3000/portTICK_PERIOD_MS); // 延迟1秒20怕
     }
    
 }
@@ -51,25 +51,26 @@ void task1(void *pvParameters) {
 
 // 任务2执行的函数
 void task2(void *pvParameters) {
+    //Serial.println("Start xTask2");
     while (1) {
-        sendStatusJson("Status","30","70","A0:20:13:34:E3");
-        vTaskDelay(10000 / portTICK_PERIOD_MS); // 延迟1秒20怕
-     //   Serial.println("Conn WSServer");
+        sendStatusJson("Status","EVANGELION_02_TESTTYPE","70","A0:20:13:34:E3");
+        vTaskDelay(3000/portTICK_PERIOD_MS); // 延迟1秒20怕
     }
 }
 
 void app_main(void) {
-    // 创建任务1
-    
+    Serial.println("Start xTaskManagement");
+    xTaskCreate(gps_task, "gps_task", 2048, NULL, 1, NULL); // 创建GPS任务
     xTaskCreate(&task1, "Task 1", 2048, NULL, 1, NULL);
-    // 创建任务2
     xTaskCreate(&task2, "Task 2", 2048, NULL, 1, NULL);
 }
 
 void setup(){
-    websocket_setup("HuaweiMate13","506506506","47.99.133.66",8080);
-    Serial.begin(115200); // 开启与电脑的串行通信
-    Serial2.begin(9600, SERIAL_8N1, RX_PIN, TX_PIN); // 开启与GPS模块的串行通信
+    websocket_setup("IoT2.4","qwertyuiop123","47.99.133.66",8080);
+    Serial.begin(115200); // 初始化用于调试的串口0
+    Serial.println("Start Init Uart");
+  // 使用Arduino的方式初始化串口2
+    Serial2.begin(9600);
     app_main();
 }
 
