@@ -31,6 +31,7 @@
 #include "DW1000Device.h"
 
 DW1000RangingClass DW1000Ranging;
+#define DEBUG true
 
 
 //other devices we are going to communicate with which are on our network:
